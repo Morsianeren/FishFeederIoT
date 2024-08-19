@@ -28,9 +28,9 @@ void FeedEventHandler(const char *event, const char *data) {
 
 // setup() runs once, when the device is first turned on
 void setup() {
-  Particle.function("setFeedInterval", Feeder::SetFeedInterval);
+  Particle.function("SetFeedInterval", Feeder::set_feed_interval);
   //Particle.variable("FeedInterval", Feeder::feedInterval);
-  Particle.function("getFeedInterval", Feeder::GetFeedInterval);
+  Particle.function("GetFeedInterval", Feeder::feed_interval);
 
   Particle.syncTime();
   waitUntil(Particle.syncTimeDone);
