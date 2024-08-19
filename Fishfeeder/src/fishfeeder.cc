@@ -8,7 +8,7 @@
 
 // Include Particle Device OS APIs
 #include "Particle.h"
-#include "../include/MG996R_Driver.hpp"
+#include "../include/feeder_class.h"
 
 // Let Device OS manage the connection to the Particle Cloud
 SYSTEM_MODE(AUTOMATIC);
@@ -20,29 +20,31 @@ SYSTEM_THREAD(ENABLED);
 // View logs with CLI using 'particle serial monitor --follow'
 SerialLogHandler logHandler(LOG_LEVEL_INFO);
 
-MG996R_Driver servo(D0);
+int i = 0;
+void FeedEventHandler(const char *event, const char *data) {
+  i++;
+  Log.info("%d: event=%s data=%s", i, event, (data ? data : "NULL"));
+}
 
 // setup() runs once, when the device is first turned on
 void setup() {
-  pinMode(D0, OUTPUT);
-  //servo.attach();
+  Particle.function("setFeedInterval", Feeder::SetFeedInterval);
+  //Particle.variable("FeedInterval", Feeder::feedInterval);
+  Particle.function("getFeedInterval", Feeder::GetFeedInterval);
+
+  Particle.syncTime();
+  waitUntil(Particle.syncTimeDone);
 }
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  //analogWrite(D0, 64);
-  //delay(2000);
-  //analogWrite(D0, 128);
-  //delay(2000);
-  //analogWrite(D0, 192);
-  //delay(2000);
 
-  for (int i = 0; i <= 180; i++) {
-    servo.setServoAngle(i);
-    delay(10);
-  }
-  delay(1000);
+  // If feeding time
+    // feed()
+    // publish feed event
 
-  servo.setServoAngle(0);
-  delay(2000);
+  //Log.info("Sending Hello World to the cloud!");
+  //Particle.publish("Hello World");
+  
+  //delay( 10 * 1000 ); // milliseconds and blocking - see docs for more info!
 }

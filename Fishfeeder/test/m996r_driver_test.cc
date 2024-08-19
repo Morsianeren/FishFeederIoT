@@ -8,7 +8,7 @@
 
 // Include Particle Device OS APIs
 #include "Particle.h"
-#include "../include/FeederClass.hpp"
+#include "../include/mg996r_driver.h"
 
 // Let Device OS manage the connection to the Particle Cloud
 SYSTEM_MODE(AUTOMATIC);
@@ -20,21 +20,29 @@ SYSTEM_THREAD(ENABLED);
 // View logs with CLI using 'particle serial monitor --follow'
 SerialLogHandler logHandler(LOG_LEVEL_INFO);
 
+Mg996rDriver servo(D0);
+
 // setup() runs once, when the device is first turned on
 void setup() {
-  Particle.function("setFeedInterval", Feeder::setFeedInterval);
-  //Particle.variable("FeedInterval", Feeder::feedInterval);
-  Particle.function("getFeedInterval", Feeder::getFeedInterval);
-
-  Particle.syncTime();
-  waitUntil(Particle.syncTimeDone);
+  pinMode(D0, OUTPUT);
+  //servo.attach();
 }
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
+  //analogWrite(D0, 64);
+  //delay(2000);
+  //analogWrite(D0, 128);
+  //delay(2000);
+  //analogWrite(D0, 192);
+  //delay(2000);
 
-  //Log.info("Sending Hello World to the cloud!");
-  //Particle.publish("Hello World");
-  
-  //delay( 10 * 1000 ); // milliseconds and blocking - see docs for more info!
+  for (int i = 0; i <= 180; i++) {
+    servo.SetServoAngle(i);
+    delay(10);
+  }
+  delay(1000);
+
+  servo.SetServoAngle(0);
+  delay(2000);
 }
